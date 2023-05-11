@@ -8,6 +8,9 @@
     <title>Aluno - Cálculo da Média</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <style>
         body {
             background-color: rgb(154, 173, 185);
@@ -15,10 +18,6 @@
 
         .row {
             margin: 1rem;
-        }
-
-        .display-6 {
-            text-align: center;
         }
 
         .container {
@@ -29,6 +28,7 @@
 
         #resultado {
             display: none;
+            margin: 2rem;
         }
 
         footer {
@@ -38,6 +38,7 @@
 </head>
 
 <body>
+
     <div class="container p-5 my-5 border">
 
         <div class="alert alert-danger" id="alert" role="alert">
@@ -47,7 +48,7 @@
         <form id="formulario" class="needs-validation" novalidate>
             <div class="row">
                 <div class="col">
-                    <div class="display-6">
+                    <div class="display-6 text-center">
                         Aluno - Cálculo da Média
                     </div>
                 </div>
@@ -110,7 +111,8 @@
             <div class="row">
                 <div class="col-4">
                     <div class="d-grid gap-3">
-                        <button type="button" class="btn btn-danger" onclick="limpar()">Limpar Formulário</button>
+                        <button type="button" class="btn btn-danger" onclick="window.location.reload()">Limpar
+                            Formulário</button>
                     </div>
                 </div>
                 <div class="col">
@@ -128,6 +130,7 @@
                         <th>Nome</th>
                         <th>Turma</th>
                         <th>Média</th>
+                        <th>Resultado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -141,6 +144,9 @@
                         <td>
                             <div id="mediaExibir"></div>
                         </td>
+                        <td>
+                            <div id="resultadoExibir"></div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -153,8 +159,13 @@
     </footer>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
     <script>
 
+        // pega os dados do formulário
         const nome = document.getElementById("nome");
         const turma = document.getElementById("turma");
 
@@ -168,9 +179,9 @@
         var tagErro = document.getElementById('alert');
         tagErro.style.display = "none";
 
-
         nome.addEventListener("input", function () {
             if (nome.value.trim() === "") {
+                nome.classList.remove("is-valid");
                 nome.classList.add("is-invalid");
                 nomeInvalid.style.display = "block";
             } else {
@@ -191,6 +202,7 @@
 
             window[nota].addEventListener("input", function () {
                 if (window[nota].value == "" || window[nota].value < 0 || window[nota].value > 10 || isNaN(window[nota].value)) {
+                    window[nota].classList.remove("is-valid");
                     window[nota].classList.add("is-invalid");
                     window[notaInvalid].style.display = "block";
                 } else {
@@ -202,43 +214,52 @@
 
         }
 
-
         function calcularMedia() {
 
+            //verifica se nome e as notas estão preenchidas
+            if (nome.classList.contains("is-valid")
+                && nota1.classList.contains("is-valid")
+                && nota2.classList.contains("is-valid")
+                && nota3.classList.contains("is-valid")
+                && nota4.classList.contains("is-valid")
+            ) {
 
-            //calcula a média com base em 4 notas
-            let media = (Number(nota1.value) + Number(nota2.value) + Number(nota3.value) + Number(nota4.value)) / 4;
+                //calcula a média com base em 4 notas
+                let media = (Number(nota1.value) + Number(nota2.value) + Number(nota3.value) + Number(nota4.value)) / 4;
 
-            //exibe a div com o resultado
-            let resultado = document.getElementById("resultado");
-            resultado.style.display = "block";
+                //exibe a div com o resultado
+                let resultado = document.getElementById("resultado");
+                resultado.style.display = "block";
 
-            //exibe os dados na tabela do HTML
-            document.getElementById('nomeExibir').innerHTML = nome.value;
-            document.getElementById('turmaExibir').innerHTML = turma.value;
-            document.getElementById('mediaExibir').innerHTML = media.toFixed(1).replace(".", ",");
+                let res = "";
 
+                if (media < 5){
+                    res = `<i class="bi bi-emoji-frown"></i> Reprovado`;
+                } else if (media < 7){
+                    res = `<i class="bi bi-emoji-neutral"></i> Recuperação`;
+                } else if (media >= 7 && media <= 10){
+                    res = `<i class="bi bi-emoji-laughing"></i> Aprovado`;
+                } else {
+                    res = `<i class="bi bi-exclamation-circle"></i> Erro`;
+                }
 
-        }
+                //exibe os dados na tabela do HTML
+                document.getElementById('nomeExibir').innerHTML = nome.value;
+                document.getElementById('turmaExibir').innerHTML = turma.value;
+                document.getElementById('mediaExibir').innerHTML = media.toFixed(1).replace(".", ",");
+                document.getElementById('resultadoExibir').innerHTML = res;
 
-        function limpar() {
-            let resultado = document.getElementById("resultado");
-            resultado.style.display = "none";
+                tagErro.style.display = "none";
 
-            let formulario = document.getElementById('formulario');
-            formulario.reset();
-
-            document.getElementById('nome').classList.remove('is-invalid');
-            for (let i = 1; i <= 4; i++) {
-                document.getElementById("nota" + i).classList.remove("is-invalid");
+            } else {
+                //alerta para preencher os dados
+                tagErro.style.display = "block";
             }
+
         }
+
 
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
