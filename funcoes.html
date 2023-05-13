@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funções</title>
+</head>
+<body>
+    <script>
+        let x = 10;
+        let y = 20;
+
+        function soma(a, b){
+            return a + b;
+        }
+
+        const somaAF = (a, b) => a + b;
+
+        console.log(soma(x, y));
+        console.log(somaAF(2, 1));
+
+        //IIFE
+        (function(){
+            console.log(soma(3, 2));
+        })();
+
+        let nome1 = "Paulo Roberto Lopes de Souza";
+        let nome2 = "Paulo Roberto Lopes de Souza";
+        let nome3 = "Paulo Roberto Lopes de Souza";
+
+        nome2 = nome2.toUpperCase();
+        nome3 = nome3.toLowerCase();
+
+        function imprimeNome(x){
+            console.log(`Olá ${x}`)
+        }
+
+        imprimeNome(nome1);
+        imprimeNome(nome2);
+        imprimeNome(nome3);
+
+
+        //ARRAY
+        const cores = ["Azul","Amarelo","Verde","Lilás","Cinza"];
+        //const numero = Number(prompt("Digite um número entre 1 e 5"));
+        console.log(cores);
+        const numero = 2;
+        console.log("Você deve usar a cor ", cores[numero - 1]);
+
+    </script>
+    
+</body>
+</html>
